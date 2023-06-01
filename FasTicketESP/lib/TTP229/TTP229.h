@@ -82,8 +82,10 @@ class TTP229
 			ReadKeys16(),
 			GetKeys16();
 	private:
+		inline void 
+			WaitForTouch()__attribute__((always_inline));
 		void
-			WaitForTouch(),
+			//WaitForTouch(),
 			Key8(),
 			Keys8(),
 			Key16(),

@@ -127,37 +127,49 @@ void TTP229::Key8()
 	_key8 = 0;
 	for (uint8_t i = 0; i < 8; i++)
 		if (GetBit()) _key8 = i + 1;
-	delay(2); // Tout
+	//delay(2); // Tout
+	delayMicroseconds(1500); 
+	yield();
 }
 void TTP229::Keys8()
 {
 	_keys8 = 0;
 	for (uint8_t i = 0; i < 8; i++)
 		if (GetBit()) _keys8 |= 1 << i;
-	delay(2); // Tout
+	//delay(2); // Tout
+	delayMicroseconds(1500); 
+	yield();
 }
 void TTP229::Key16()
 {
 	_key16 = 0;
 	for (uint8_t i = 0; i < 16; i++)
 		if (GetBit()) _key16 = i + 1;
-	delay(2); // Tout
+	//delay(2); // Tout
+	delayMicroseconds(1500); 
+	yield();
 }
 void TTP229::Keys16()
 {
 	_keys16 = 0;
 	for (uint8_t i = 0; i < 16; i++)
 		if (GetBit()) _keys16 |= 1 << i;
-	delay(2); // Tout
+	//delay(2); // Tout
+	delayMicroseconds(1500); 
+	yield();
 }
 
 bool TTP229::GetBit()
 {
 	digitalWrite(_sclPin, LOW);
-	delayMicroseconds(2); // 500KHz
+	//delayMicroseconds(2); // 500KHz
+	delayMicroseconds(1500); 
+	yield();
 	bool retVal = !digitalRead(_sdoPin);
 	digitalWrite(_sclPin, HIGH);
-	delayMicroseconds(2); // 500KHz
+	//delayMicroseconds(2); // 500KHz
+	delayMicroseconds(1500); 
+	yield();
 	return retVal;
 }
 
@@ -168,18 +180,56 @@ bool TTP229::IsTouch()
 	{
 		if (--timeout == 0) return false;
 		delayMicroseconds(10);
+		yield();
 	}
 	while (!digitalRead(_sdoPin)) // DV HIGH
 	{
 		if (--timeout == 0) return false;
 		delayMicroseconds(10);
+		yield();
 	}
 	delayMicroseconds(10); // Tw
+	yield();
 	return true;
 }
 void TTP229::WaitForTouch()
 {
-	while (digitalRead(_sdoPin)); // DV LOW
-	while (!digitalRead(_sdoPin)); // DV HIGH
+	//#ifndef ESP8266
+	while (digitalRead(_sdoPin)){yield();}; // DV LOW
+	while (!digitalRead(_sdoPin)){yield();}; // DV HIGH
 	delayMicroseconds(10); // Tw
-}
+	//#else
+	//WaitForTouch_WDT();
+	//#endif
+}	
+
+
+// void TTP229::WaitForTouch()//_WTD
+// {
+// 	int read = 0 , lvl = 1 ;
+// 	while(read==0)
+// 	{
+// 		if(lvl == 1)
+// 			for(int i = 0 ;  lvl && i < 1000; i++)
+// 			{
+// 				lvl = (int) (digitalRead(_sdoPin));	// DV LOW
+// 				//delayMicroseconds(10);
+// 				yield();//WTD
+// 			}
+// 		else
+// 		{
+// 			for(int i = 0 ;  !lvl && i < 1000; i++)
+// 			{
+// 				lvl = (int) (digitalRead(_sdoPin));	// DV HIGH
+// 				//4delayMicroseconds(10);
+// 				yield();
+// 			}
+// 			if(!lvl)
+// 			{
+// 				read = 1;
+// 			}
+// 		}
+// 		delayMicroseconds(100);
+// 		yield();
+// 	}
+// }

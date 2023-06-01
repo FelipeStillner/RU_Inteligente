@@ -1,3 +1,5 @@
+//
+
 #include <Arduino.h>
 #include <SPI.h>
 #include <MFRC522.h>
@@ -34,7 +36,7 @@ Menu menu;
 
 void setup() {
   conectaWifi();
-	Serial.begin(9600);
+	Serial.begin(74480);
   SPI.begin(); 
   tft.begin();
   rfid.PCD_Init();  
@@ -47,7 +49,6 @@ void loop() {
   {
     int key = 0;
     key = ler(ttp.ReadKey16());
-    Serial.println(key);
     if(key < CONF && key > 0)
     {
       car.setItem(key);
@@ -102,12 +103,11 @@ void loop() {
     
     String str = String();
     lerRFID(&rfid, &str);
-    Serial.println(str);
     if(str != String())
     { 
-      menu.atualizar(EstINIC);
       // Buscar no servidor se tem saldo
       int debitado = verificaSaldo(str, car.getValor());
+      Serial.println(debitado);
       if(debitado < 0)
       {
         delay(500);

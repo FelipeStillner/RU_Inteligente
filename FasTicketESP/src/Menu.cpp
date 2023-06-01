@@ -79,7 +79,7 @@ void Menu::atualizar(int est)
   }
   case EstPGMT: // Pagamento feito
   {
-    str = String("Pagamento efetuado\n imprimindo ficha");
+    str = String("Pagamento efetuado\nimprimindo ficha");
     break;
   }
   case EstSSAL: // Pagamento nao feito
